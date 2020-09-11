@@ -1,5 +1,28 @@
 package graph
 
+type dijkstraQueue struct {
+	*prioQueue
+}
+
+func (q *dijkstraQueue) Push(v int, cost int64) {
+	q.prioQueue.cost[v] = cost
+	q.prioQueue.Push(v)
+}
+
+func (q *dijkstraQueue) Fix(v int, cost int64) {
+	q.prioQueue.cost[v] = cost
+	q.prioQueue.Fix(v)
+}
+
+func (q *dijkstraQueue) SetDist(cost []int64) {
+	if q == nil || q.prioQueue == nil {
+		*q = dijkstraQueue{emptyPrioQueue(cost)}
+		return
+	}
+	q.prioQueue.index = make([]int, len(cost))
+	q.prioQueue.cost = cost
+}
+
 type prioQueue struct {
 	heap  []int // vertices in heap order
 	index []int // index of each vertex in the heap
